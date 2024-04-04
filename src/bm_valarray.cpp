@@ -43,20 +43,16 @@ random_v (int sz)
 #include <benchmark/benchmark.h>
 
 void
-// t1(const std::valarray<double>& vad)
-t1 (const std::vector<double> &vad_)
+t1 (const std::valarray<double> &vad)
 {
-  // const std::valarray<double> vad = std::valarray<double>(vad_.data(),
-  // vad_.size());
+  auto mean = vad.sum () / vad.size ();
+  return;
+}
+
+void
+t1_1 (const std::vector<double> &vad_)
+{
   const auto vad = std::valarray<double> (vad_.data (), vad_.size ());
-
-  // [&vad]() {
-  //     std::for_each(std::begin(vad), std::end(vad),
-  //         [](const double v) {
-  //             // std::cout << v << ", ";
-  //         });
-  // }();
-
   auto mean = vad.sum () / vad.size ();
 
   return;
@@ -78,21 +74,32 @@ t2 (const std::vector<double> &vad)
 }
 
 static void
-BM_t1 (benchmark::State &state)
+BM_valarray (benchmark::State &state)
 {
   // Perform setup here
   const auto vad_ = random_v (256);
-  //   const std::valarray<double> vad = std::valarray<double>(vad_.data(),
-  //   vad_.size());
+  const auto vad = std::valarray<double> (vad_.data (), vad_.size ());
   for (auto _ : state)
     {
       // This code gets timed
-      t1 (vad_);
+      t1 (vad);
     }
 }
 
 static void
-BM_t2 (benchmark::State &state)
+BM_valarray1 (benchmark::State &state)
+{
+  // Perform setup here
+  const auto vad = random_v (256);
+  for (auto _ : state)
+    {
+      // This code gets timed
+      t1_1 (vad);
+    }
+}
+
+static void
+BM_stdvector (benchmark::State &state)
 {
   // Perform setup here
   const auto vad = random_v (256);
@@ -104,9 +111,9 @@ BM_t2 (benchmark::State &state)
 }
 
 // Register the function as a benchmark
-BENCHMARK (BM_t1);
-// BENCHMARK(BM_test_list);
-BENCHMARK (BM_t2);
+BENCHMARK (BM_valarray);
+BENCHMARK (BM_valarray1);
+BENCHMARK (BM_stdvector);
 
 // Run the benchmark
 BENCHMARK_MAIN ();
