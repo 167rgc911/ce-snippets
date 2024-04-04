@@ -3,7 +3,7 @@
  *
  *       Filename:  bm_valarrays.cpp
  *
- *    Description:  
+ *    Description:
  *
  *        Version:  1.0
  *        Created:  04/04/24 16:58:06
@@ -11,7 +11,7 @@
  *       Compiler:  gcc
  *
  *         Author:  rgc (rgc), sessyargc.jp@gmail.com
- *   Organization:  
+ *   Organization:
  *
  * =====================================================================================
  */
@@ -24,83 +24,89 @@
 #include <random>
 
 std::vector<double>
-random_v(int sz)
+random_v (int sz)
 {
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::uniform_real_distribution<> dis(1.0, 99.0);
+  std::random_device rd;
+  std::mt19937 gen (rd ());
+  std::uniform_real_distribution<> dis (1.0, 99.0);
 
-    std::vector<double> sv {};
+  std::vector<double> sv{};
 
-    for(auto i = 0; i < sz; ++i)
+  for (auto i = 0; i < sz; ++i)
     {
-        sv.push_back(dis(gen));
+      sv.push_back (dis (gen));
     }
 
-    return sv;
+  return sv;
 }
 
 #include <benchmark/benchmark.h>
 
 void
 // t1(const std::valarray<double>& vad)
-t1(const std::vector<double>& vad_)
+t1 (const std::vector<double> &vad_)
 {
-    // const std::valarray<double> vad = std::valarray<double>(vad_.data(), vad_.size());
-    const auto vad = std::valarray<double>(vad_.data(), vad_.size());
+  // const std::valarray<double> vad = std::valarray<double>(vad_.data(),
+  // vad_.size());
+  const auto vad = std::valarray<double> (vad_.data (), vad_.size ());
 
-    // [&vad]() {
-    //     std::for_each(std::begin(vad), std::end(vad),
-    //         [](const double v) {
-    //             // std::cout << v << ", ";
-    //         });
-    // }();
+  // [&vad]() {
+  //     std::for_each(std::begin(vad), std::end(vad),
+  //         [](const double v) {
+  //             // std::cout << v << ", ";
+  //         });
+  // }();
 
-    auto mean = vad.sum() / vad.size();
+  auto mean = vad.sum () / vad.size ();
 
-    return;
+  return;
 }
 
 void
-t2(const std::vector<double>& vad)
+t2 (const std::vector<double> &vad)
 {
-    // [&vad]() {
-    //     std::for_each(std::begin(vad), std::end(vad),
-    //         [](const double v) {
-    //             std::cout << v << ", ";
-    //         });
-    // }();
+  // [&vad]() {
+  //     std::for_each(std::begin(vad), std::end(vad),
+  //         [](const double v) {
+  //             std::cout << v << ", ";
+  //         });
+  // }();
 
-    auto mean = std::accumulate(vad.begin(), vad.end(), 0.0) / vad.size();
+  auto mean = std::accumulate (vad.begin (), vad.end (), 0.0) / vad.size ();
 
-    return;
+  return;
 }
 
-static void BM_t1(benchmark::State& state) {
+static void
+BM_t1 (benchmark::State &state)
+{
   // Perform setup here
-  const auto vad_ = random_v(256);
-//   const std::valarray<double> vad = std::valarray<double>(vad_.data(), vad_.size());
-  for (auto _ : state) {
-    // This code gets timed
-    t1(vad_);
-  }
+  const auto vad_ = random_v (256);
+  //   const std::valarray<double> vad = std::valarray<double>(vad_.data(),
+  //   vad_.size());
+  for (auto _ : state)
+    {
+      // This code gets timed
+      t1 (vad_);
+    }
 }
 
-static void BM_t2(benchmark::State& state) {
+static void
+BM_t2 (benchmark::State &state)
+{
   // Perform setup here
-  const auto vad = random_v(256);
-  for (auto _ : state) {
-    // This code gets timed
-    t2(vad);
-  }
+  const auto vad = random_v (256);
+  for (auto _ : state)
+    {
+      // This code gets timed
+      t2 (vad);
+    }
 }
 
 // Register the function as a benchmark
-BENCHMARK(BM_t1);
+BENCHMARK (BM_t1);
 // BENCHMARK(BM_test_list);
-BENCHMARK(BM_t2);
-
+BENCHMARK (BM_t2);
 
 // Run the benchmark
-BENCHMARK_MAIN();
-
+BENCHMARK_MAIN ();
