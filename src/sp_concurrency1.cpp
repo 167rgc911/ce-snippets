@@ -96,7 +96,13 @@ class task_system
     while (true)
       {
         std::function<void ()> f;
-        _q.pop (f);
+        /* _q.pop (f); */
+        /* :REMARK:04/07/24 08:19:26::
+         * when _q.done == true; f is garbage!
+         * check return value
+         * */
+        if (!_q.pop (f))
+          break;
         f ();
       }
   }
@@ -112,6 +118,10 @@ public:
 
   ~task_system ()
   {
+    /* :REMARK:04/07/24 08:15:59::
+     * without this call join() below does an inf-loop */
+    _q.done ();
+
     for (auto &e : _threads)
       e.join ();
   }
