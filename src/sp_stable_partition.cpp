@@ -85,7 +85,9 @@ main ()
     std::cout << "\n";
 
     for (auto pp = 0; pp < sz; ++pp)
-        {std::cout << p[pp] << " "; };
+      {
+        std::cout << p[pp] << " ";
+      };
     std::cout << "\n";
   }
 
