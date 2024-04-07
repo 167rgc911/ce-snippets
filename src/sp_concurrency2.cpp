@@ -157,7 +157,5 @@ main ()
   t.async_ (f4);
   t.async_ (f1);
 
-  /* :REMARK:04/07/24 07:56:32::
-   * no real way to terminate
-   * */
+  return 0;
 }
